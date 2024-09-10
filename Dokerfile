@@ -30,7 +30,7 @@ ENV LC_ALL="C.UTF-8" LANG="C.UTF-8"
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64
-ENV PORT 5176
+ENV PORT 52001
 EXPOSE $PORT/tcp
 # 在run時要帶 -v /usr/local/cuda:/usr/local/cuda
 
