@@ -175,14 +175,17 @@ def spoken_to_mixed(input_string):
 
 # 編碼函數
 def encode_command(hotwords):
-    ai_code = ai_machines.get(hotwords['ai_code'], -1)
-    action_code = actions.get(hotwords['action_code'], -1)
+    ids = {
+        "ai_code": -1,
+        "action_code": -1,
+        "numbers": -1
+    }
 
-    if hotwords['numbers'] == -1:
-        return (ai_code, action_code, -1)
-    numbers = int(spoken_to_mixed(hotwords['numbers']))
-
-    return {"ai code": ai_code, "action code": action_code, "numbers": numbers}
+    ids['ai_code'] = ai_machines.get(hotwords['ai_code'], -1)
+    ids['action_code'] = actions.get(hotwords['action_code'], -1)
+    if hotwords['numbers'] != -1:
+        ids['numbers'] = int(spoken_to_mixed(hotwords['numbers']))
+    return ids
 
 if __name__ == "__main__":
     # 示例使用
