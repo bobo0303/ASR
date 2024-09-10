@@ -1,1 +1,42 @@
+# wjy3
+ruamel.yaml==0.17.21
+ruamel.yaml.clib==0.2.7
+APScheduler==3.9.1
+pyodbc==4.0.35
+pydantic==1.10.2
+SQLAlchemy
+wjy3==1.7.1
+python-multipart
+
+# finetune (https://github.com/yeyupiaoling/Whisper-Finetune/blob/master/requirements.txt)
+numpy==1.23.1
+soundfile>=0.12.1
+librosa>=0.10.0
+dataclasses>=0.6
+transformers>=4.39.3
+bitsandbytes>=0.41.0
+datasets>=2.11.0
+evaluate>=0.4.0
+ctranslate2>=3.21.0
+faster-whisper>=0.10.0
+jiwer>=2.5.1
+peft>=0.6.2
+accelerate>=0.21.0
+zhconv==1.4.2   # >=1.4.2 no found (build from Azure)
+tqdm>=4.62.1
+soundcard>=0.4.2
+uvicorn>=0.21.1
+fastapi>=0.95.1
+starlette>=0.26.1
+tensorboardX>=2.2
+
+# whisper (https://github.com/openai/whisper)
+numba
+# numpy
+torchaudio==0.10.0
+torch==1.10.0
+# tqdm
+more-itertools
+tiktoken
+triton>=2.0.0,<3
 
