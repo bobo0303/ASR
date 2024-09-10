@@ -88,7 +88,7 @@ async def transcribe(file: UploadFile = File(...)):
     return result['command number']
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5176))
+    port = int(os.environ.get("PORT", 52001))
     uvicorn.config.LOGGING_CONFIG["formatters"]["default"]["fmt"] = "%(asctime)s [%(name)s] %(levelprefix)s %(message)s"
     uvicorn.config.LOGGING_CONFIG["formatters"]["access"]["fmt"] = '%(asctime)s [%(name)s] %(levelprefix)s %(client_addr)s - "%(request_line)s" %(status_code)s'
     uvicorn.run(app, log_level='info', host='0.0.0.0', port=port)
