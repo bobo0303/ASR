@@ -1,0 +1,36 @@
+database:
+  active: dev # dev, prod, rpa
+  application:
+    dev:
+      dialect: mssql # https://www.osgeo.cn/sqlalchemy/core/engines.html#database-urls
+      driver: ODBC Driver 17 for SQL Server
+      server: openaiitdevsrv.database.windows.net
+      port: 1433
+      database: openaiitdevdb
+      username: openaiadmin
+      password: Auo+12345678
+      prefix: meeting_assistant_model_finetune_dev
+      pool-size: 50
+      max-overflow: 50
+      pool-recycle: 1800
+      show-sql: false
+    prod:
+      dialect: mssql # https://www.osgeo.cn/sqlalchemy/core/engines.html#database-urls
+      driver: ODBC Driver 17 for SQL Server
+      server: gpt-srv-prod01.database.windows.net
+      port: 1433
+      database: gpt-db-prod01
+      username: gpt$Admin
+      password: gpt$Pass
+      prefix: meeting_assistant_model_finetune
+      pool-size: 100
+      max-overflow: 100
+      pool-recycle: 1800
+      show-sql: true
+
+# azure相關資訊
+azure:
+  delta-table:
+    server-host: adb-198721287136097.17.azuredatabricks.net
+    http-path: sql/protocolv1/o/198721287136097/1004-014830-rpx1nz4r
+    access-token: dapie962067262dbbbef023d8bf130a9a6f9
