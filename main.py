@@ -84,7 +84,7 @@ async def load_model(request: LoadModelRequest):
         raise HTTPException(status_code=400, default="Model not found")
 
     model.load_model(request.models_name)
-    return BaseResponse(message={f"Model '{request.models_name}' has been loaded successfully."})
+    return BaseResponse(message="Model "+request.models_name+" has been loaded successfully.")
 
 # inference endpoint
 @app.post("/transcribe")
