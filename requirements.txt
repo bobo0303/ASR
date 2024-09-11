@@ -5,7 +5,7 @@ APScheduler==3.9.1
 pyodbc==4.0.35
 pydantic==1.10.2
 SQLAlchemy
-wjy3==1.7.1
+# wjy3==1.7.1
 python-multipart
 
 # finetune (https://github.com/yeyupiaoling/Whisper-Finetune/blob/master/requirements.txt)
