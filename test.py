@@ -4,7 +4,7 @@ import requests
 url = "http://0.0.0.0:52001/transcribe"  # 這裡修改成你的 FastAPI 服務的 URL
 
 # 讀取要傳輸的音頻檔案（二進制格式）
-with open("whisper_API/test_audio/test.wav", "rb") as f:
+with open("audio/test.wav", "rb") as f:
     audio_binary_file = f.read()
 
     files = {"file": ("test.wav", audio_binary_file)}

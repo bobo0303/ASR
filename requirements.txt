@@ -5,7 +5,7 @@ APScheduler==3.9.1
 pyodbc==4.0.35
 pydantic==1.10.2
 SQLAlchemy
-# wjy3==1.7.1
+# whl/wjy3-1.7.1-py3-none-any.whl
 python-multipart
 
 # finetune (https://github.com/yeyupiaoling/Whisper-Finetune/blob/master/requirements.txt)
@@ -29,12 +29,13 @@ uvicorn>=0.21.1
 fastapi>=0.95.1
 starlette>=0.26.1
 tensorboardX>=2.2
+schedule
 
 # whisper (https://github.com/openai/whisper)
 numba
 # numpy
-torchaudio==0.10.0
-torch==1.10.0
+torchaudio==0.13.1
+torch==1.13.1 
 # tqdm
 more-itertools
 tiktoken

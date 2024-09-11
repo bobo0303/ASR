@@ -14,3 +14,56 @@ OPTIONS = {
                       two , off, tiger, viper, Scramble, Holding Hands, fluid four, Engaged, Mission Complete, Initial Five, wedge, Go Cover, IN, OFF, Cleared to Land, Angle and Heading, Cleared for Takeoff, Go Around.
                       """,
 }
+
+#############################################################################
+# 示例 ATC 熱詞列表
+ACTION_HOTWORDS = [
+    "Scramble", "Holding Hands", "Engage", "Engaged", "Mission Complete", "Initial Five",
+    "Go Cover", "Cleared for Takeoff", "Cleared for Take off", "Cleared to Land", "Go Around", "IN", "OFF",
+    "Angel", "Heading",
+]
+
+AI_MACHINE_HOTWORDS = ['Viber', 'Viper', 'Tiger']
+
+AI_MACHINE_NUMBER_HOTWORDS = ['one', 'two', 'tree', 'three', 'four']
+
+NUMBER_HOTWORDS = ['zero', 'one', 'two', 'tree', 'three', 'four', 'five',
+                   'six', 'seven', 'eight', 'nine', 'niner', 'thousand']
+#############################################################################
+
+#############################################################################
+# 定義 AI 機器與動作的編碼
+AI_MACHINES = {
+    "tiger one": 1, "tiger two": 2, "tiger tree": 3, "tiger three": 3, "tiger four": 4,
+    "viper one": 5, "viper two": 6, "viper tree": 7, "viper four": 8,
+    "viber one": 5, "viber two": 6, "viber tree": 7, "viber four": 8
+}
+
+ACTIONS = {
+    "scramble": 1, "holding hands": 2, "engage": 3, "engaged": 3, "mission complete": 4,
+    "initial five": 5, "go cover": 6, "in": 7, "off": 8, "cleared for takeoff": 9, "cleared for take off": 9,
+    "cleared to land": 10, "go around": 11, "heading": 12, "angel": 13, "angle": 13
+}
+#############################################################################
+
+
+#############################################################################
+# 數字文字轉換
+DIGIT_TO_WORD = {
+    '0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four',
+    '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine'
+}
+
+WORD_TO_DIGIT = {
+    'zero': '0', 'one': '1', 'two': '2', 'three': '3', 'tree': '3', 'four': '4',
+    'five': '5', 'six': '6', 'seven': '7', 'eight': '8', 'nine': '9', 'niner': '9'
+}
+
+SPOKEN_PATTERNS = {
+        'thousand': '000',
+    }
+
+NUMBER_PATTERNS = {
+    '000': 'thousand',
+}
+#############################################################################

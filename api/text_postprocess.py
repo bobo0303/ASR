@@ -1,50 +1,55 @@
-import string
 import re
+import os
 import time
+import sys
+import string
 
-# 示例 ATC 熱詞列表
-# action_hotwords = [
-#     "Scramble", "Holding Hands", "Flow Four", "Engaged",
-#     "Mission Complete", "Initial Five", "Gear Check, Full Stop",
-#     "Go Cover", "IN", "OFF", "Cleared to Land",
-#     "Angle", "Heading",
-# ]
-action_hotwords = [
-    "Scramble", "Holding Hands", "Engage", "Engaged", "Mission Complete", "Initial Five",
-    "Go Cover", "Cleared for Takeoff", "Cleared for Take off", "Cleared to Land", "Go Around", "IN", "OFF",
-    "Angel", "Heading",
-]
-
-# ai_machine_hotwords = ['Alpha', 'Bravo', 'Delta', 'Gamma']
-ai_machine_hotwords = ['Viber', 'Viper', 'Tiger']
-
-ai_machine_number_hotwords = ['one', 'two', 'tree', 'three', 'four']
-
-number_hotwords = ['zero', 'one', 'two', 'tree', 'three', 'four', 'five',
-                   'six', 'seven', 'eight', 'nine', 'niner', 'thousand']
-
-
-# 定義 AI 機器與動作的編碼
-ai_machines = {
-    "tiger one": 1, "tiger two": 2, "tiger tree": 3, "tiger three": 3, "tiger four": 4,
-    "viper one": 5, "viper two": 6, "viper tree": 7, "viper four": 8,
-    "viber one": 5, "viber two": 6, "viber tree": 7, "viber four": 8
-}
-
-actions = {
-    "scramble": 1, "holding hands": 2, "engage": 3, "mission complete": 4,
-    "initial five": 5, "go cover": 6, "in": 7, "off": 8, "cleared for takeoff": 9, "cleared for take off": 9,
-    "cleared to land": 10, "go around": 11, "heading": 12, "angel": 13, "angle": 13
-}
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from lib.constant import (  
+    ACTION_HOTWORDS,  
+    AI_MACHINE_HOTWORDS,  
+    AI_MACHINE_NUMBER_HOTWORDS,  
+    NUMBER_HOTWORDS,  
+    AI_MACHINES,  
+    ACTIONS,  
+    DIGIT_TO_WORD,  
+    WORD_TO_DIGIT,
+    SPOKEN_PATTERNS,
+    NUMBER_PATTERNS  
+)  
 
 # 去除標點符號並將文本轉換為小寫
 def remove_punctuation_and_lowercase(transcription):
+    """  Remove punctuation and convert text to lowercase  
+
+    :param  
+        ----------  
+        transcription: str  
+            The input text to be cleaned  
+    :rtype  
+        ----------  
+        str: The cleaned text  
+    """
+
     text = transcription.translate(str.maketrans("", "", string.punctuation))
     text = text.lower()
     return text
 
 # 比對熱詞並返回匹配的關鍵詞
 def find_matched_hotwords(text, hotwords):
+    """  Find matched hotwords in the text  
+
+    :param  
+        ----------  
+        text: str  
+            The input text to be searched  
+        hotwords: list  
+            The list of hotwords to match  
+    :rtype  
+        ----------  
+        tuple: The index and matched hotword, or (None, -1) if no match found  
+    """ 
+ 
     text = f" {text} "
     for index, word in enumerate(hotwords):
         if f" {word.lower()} " in text:
@@ -53,7 +58,21 @@ def find_matched_hotwords(text, hotwords):
             return matched_index, matched_words
     return None, -1
 
+# 比對熱詞只保留數字並返回關鍵數字
 def check_numbers_hotwords(text, hotwords):
+    """  Check for number hotwords in the text  
+
+    :param  
+        ----------  
+        text: list  
+            The input text split into words  
+        hotwords: list  
+            The list of number hotwords to match  
+    :rtype  
+        ----------  
+        list or int: The list of matched number hotwords, or -1 if no match found  
+    """ 
+
     matched_words = []
     for word in text:
         if word in hotwords:
@@ -62,27 +81,53 @@ def check_numbers_hotwords(text, hotwords):
 
 # 將數字字符串轉換為口語形式
 def mixed_to_spoken(input_string):
-    digit_to_word = {
-        '0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four',
-        '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine'
-    }
+    """  Convert mixed alphanumeric string to spoken form  
 
+    :param  
+        ----------  
+        input_string: str  
+            The input alphanumeric string  
+    :rtype  
+        ----------  
+        str: The spoken form of the input string  
+    """ 
+ 
     def number_to_spoken(number_string):
-        number_patterns = {
-            '000': 'thousand',
-        }
-        for pattern, word in number_patterns.items():
+        """  Convert number string to spoken form  
+
+        :param  
+            ----------  
+            number_string: str  
+                The input number string  
+        :rtype  
+            ----------  
+            str: The spoken form of the number string  
+        """ 
+
+        for pattern, word in NUMBER_PATTERNS.items():
             if number_string.endswith(pattern):
                 num_len = len(number_string)
                 if num_len > len(pattern):
                     prefix = number_string[:-len(pattern)]
-                    prefix_spoken = ' '.join(digit_to_word[digit] for digit in prefix)
+                    prefix_spoken = ' '.join(DIGIT_TO_WORD[digit] for digit in prefix)
                     return f"{prefix_spoken} {word}"
                 else:
                     return word
-        return ' '.join(digit_to_word[digit] for digit in number_string)
+        return ' '.join(DIGIT_TO_WORD[digit] for digit in number_string)
 
     def process_alphanumeric_segment(segment):
+        """  Process alphanumeric segment  
+        
+        :param  
+            ----------  
+            segment: str  
+                The input segment  
+        :rtype  
+            ----------  
+            str: The processed segment  
+        """
+
+
         if segment.isdigit():
             return number_to_spoken(segment)
         else:
@@ -97,33 +142,60 @@ def mixed_to_spoken(input_string):
 
 # 將字母和數字分開
 def separate_alphanumeric(text):
+    """  This function separates letters and numbers in the given text.  
+      
+    :param  
+        ----------  
+        text: str  
+            The input string containing alphanumeric characters.  
+      
+    :rtype  
+        ----------  
+        str:   
+            The modified string with letters and numbers separated by spaces.  
+    """ 
+ 
     pattern = re.compile(r'([a-zA-Z]+)(\d+)|(\d+)([a-zA-Z]+)')
     separated_text = pattern.sub(r'\1 \2\3 \4', text)
     return separated_text
 
 # 處理轉錄文本，找到熱詞並轉換數字為口語形式
 def process_transcription(transcription):
+    """  This function processes the transcribed text, identifies hotwords, and converts numbers to spoken form.  
+      
+    :param  
+        ----------  
+        transcription: str  
+            The transcribed text to be processed.  
+      
+    :rtype  
+        ----------  
+        tuple:   
+            A tuple containing a dictionary of hotwords and the processed spoken text.  
+    """ 
+
     cleaned_text = remove_punctuation_and_lowercase(transcription)
     separated_text = separate_alphanumeric(cleaned_text)
     spoken_text = mixed_to_spoken(separated_text)
 
     # find AI machine type
-    matched_machine_index, matched_machine_hotwords = find_matched_hotwords(spoken_text, ai_machine_hotwords)
+    matched_machine_index, matched_machine_hotwords = find_matched_hotwords(spoken_text, AI_MACHINE_HOTWORDS)
 
     # find AI machine number
     if matched_machine_index is not None and spoken_text:
-        ai_machine_number = check_numbers_hotwords([spoken_text.split()[matched_machine_index+1]], ai_machine_number_hotwords)
-        matched_machine_hotwords=f"{matched_machine_hotwords} {' '.join(ai_machine_number)}" if ai_machine_number != -1 else -1
+        if len(spoken_text.split())>=matched_machine_index+1:
+            ai_machine_number = check_numbers_hotwords([spoken_text.split()[matched_machine_index+1]], AI_MACHINE_NUMBER_HOTWORDS)
+            matched_machine_hotwords=f"{matched_machine_hotwords} {' '.join(ai_machine_number)}" if ai_machine_number != -1 else -1
 
     # find action type
-    matched_action_index, matched_action_hotwords = find_matched_hotwords(spoken_text, action_hotwords)
+    matched_action_index, matched_action_hotwords = find_matched_hotwords(spoken_text, ACTION_HOTWORDS)
 
     # number to word
 
     # checking the last number
     if matched_action_hotwords in ["angel", "heading"] and spoken_text:
         last_data = spoken_text.split()[spoken_text.split().index(matched_action_hotwords)+1:]
-        numbers = check_numbers_hotwords(last_data, number_hotwords)
+        numbers = check_numbers_hotwords(last_data, NUMBER_HOTWORDS)
         numbers = ' '.join(numbers) if numbers != -1 else -1
     else:
         numbers = -1
@@ -137,23 +209,40 @@ def process_transcription(transcription):
     return hotwords, spoken_text
 
 def spoken_to_mixed(input_string):
-    word_to_digit = {
-        'zero': '0', 'one': '1', 'two': '2', 'three': '3', 'tree': '3', 'four': '4',
-        'five': '5', 'six': '6', 'seven': '7', 'eight': '8', 'nine': '9', 'niner': '9'
-    }
-    spoken_patterns = {
-        'thousand': '000',
-    }
-
+    """  This function converts spoken numbers in the input string to a mixed alphanumeric form.  
+      
+    :param  
+        ----------  
+        input_string: str  
+            The input string containing spoken numbers.  
+      
+    :rtype  
+        ----------  
+        str:   
+            The modified string with spoken numbers converted to their numeric forms.  
+    """  
+        
     def spoken_to_number(spoken_string):
+        """  Helper function to convert spoken words to numbers.  
+  
+        :param  
+            ----------  
+            spoken_string: str  
+                The input string containing spoken numbers.  
+          
+        :rtype  
+            ----------  
+            str:  
+                The string with spoken numbers converted to numeric form.  
+        """ 
 
         words = spoken_string.split()
         result = []
 
         for word in words:
-            if word in word_to_digit:
-                result.append(word_to_digit[word])
-            elif word in spoken_patterns:
+            if word in WORD_TO_DIGIT:
+                result.append(WORD_TO_DIGIT[word])
+            elif word in SPOKEN_PATTERNS:
                 result.append(spoken_patterns[word])
             else:
                 result.append(word)
@@ -161,7 +250,21 @@ def spoken_to_mixed(input_string):
         return ''.join(result)
 
     def process_segment(segment):
-        if all(word in word_to_digit or word in spoken_patterns for word in segment.split()):
+        """  Helper function to process segments of the input string.  
+  
+        :param  
+            ----------  
+            segment: str  
+                A segment of the input string to be processed.  
+          
+        :rtype  
+            ----------  
+            str:  
+                The processed segment with spoken numbers converted to numeric form if applicable.  
+        """     
+            
+
+        if all(word in WORD_TO_DIGIT or word in SPOKEN_PATTERNS for word in segment.split()):
             return spoken_to_number(segment)
         else:
             return segment
@@ -175,14 +278,27 @@ def spoken_to_mixed(input_string):
 
 # 編碼函數
 def encode_command(hotwords):
+    """  This function encodes hotwords into corresponding command IDs.  
+      
+    :param  
+        ----------  
+        hotwords: dict  
+            A dictionary containing identified hotwords.  
+      
+    :rtype  
+        ----------  
+        dict:   
+            A dictionary with encoded command IDs.  
+    """
+
     ids = {
         "ai_code": -1,
         "action_code": -1,
         "numbers": -1
     }
 
-    ids['ai_code'] = ai_machines.get(hotwords['ai_code'], -1)
-    ids['action_code'] = actions.get(hotwords['action_code'], -1)
+    ids['ai_code'] = AI_MACHINES.get(hotwords['ai_code'], -1)
+    ids['action_code'] = ACTIONS.get(hotwords['action_code'], -1)
     if hotwords['numbers'] != -1:
         ids['numbers'] = int(spoken_to_mixed(hotwords['numbers']))
     return ids
