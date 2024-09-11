@@ -2,36 +2,33 @@ FROM python:3.8.10-slim
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
-RUN --mount=type=bind,source=/apt,target=/mnt/apt \
-    --mount=type=cache,target=/var/cache/apt \
-    --mount=type=cache,target=/var/lib/apt \
-    apt-get update && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 vim ffmpeg zip unzip htop screen /mnt/apt/libcudnn8_8.0.5.39-1%2Bcuda11.1_amd64.deb
+RUN apt-get update && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 vim ffmpeg zip unzip htop screen && apt-get clean && rm -rf /var/lib/apt/lists
 
 
-
+RUN pip install --upgrade pip
+# 將 requirements.txt 複製到 Docker 映像中  
+COPY requirements.txt .  
+COPY whl/wjy3-1.7.1-py3-none-any.whl whl/wjy3-1.7.1-py3-none-any.whl 
 # python packages
-RUN pip install --upgrade pip==19.3
-RUN --mount=type=bind,source=/requirements.txt,target=/mnt/requirements.txt \
-    --mount=type=bind,source=/wheel,target=/mnt/pypi \
-    pip3 install --no-cache-dir -r /mnt/requirements.txt -f /mnt/pypi/ --only-binary=:all: --disable-pip-version-check
-    # pip3 install --no-cache-dir -r /mnt/requirements.txt -f /mnt/pypi/ --only-binary=:all: --disable-pip-version-check -v
-
+RUN pip3 install -r requirements.txt && \
+    pip3 install whl/wjy3-1.7.1-py3-none-any.whl
 
 # app
-ADD /app /app
 WORKDIR /app
 
-# cuda
-RUN echo "/usr/lib/`arch`-linux-gnu/tegra" >> /etc/ld.so.conf.d/nvidia-tegra.conf && \
-    echo "/usr/local/cuda-11.2/targets/`arch`-linux/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
-    ldconfig
 
-ENV LC_ALL="C.UTF-8" LANG="C.UTF-8"
-ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
-ENV NVIDIA_VISIBLE_DEVICES=all
-ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64
-ENV PORT 52001
+
+# 设置环境变量  
+ENV LC_ALL=C.UTF-8  
+ENV LANG=C.UTF-8  
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility  
+ENV NVIDIA_VISIBLE_DEVICES=all  
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64  
+ENV PORT=52001  
+
+# 暴露端口  
 EXPOSE $PORT/tcp
+
 # 在run時要帶 -v /usr/local/cuda:/usr/local/cuda
 
 
