@@ -39,17 +39,3 @@ _MODELS = {
     "large": "https://openaipublic.azureedge.net/main/whisper/models/e5b1a55b89c1367dacf97e3e19bfd829a01529dbfdeefa8caeb59b3f1b81dadb/large-v3.pt",  
 }
 
-        """ The process of SOP step state change
-
-        :param
-        ----------
-        sop_frame_counter: len(sop_state): count each step process time
-        sequence: the step trigger sequence of a SOP round
-        total_frame: count the frames from start to the end
-
-        :rtype
-        total_frame: int
-        sequence: list
-
-        """
-
