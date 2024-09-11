@@ -5,10 +5,10 @@ import os
 import time
 import uvicorn
 import datetime
-# from wjy3 import BaseResponse
 
 from api.model import Model
 from lib.data_object import LoadModelRequest
+from lib.base_object import BaseResponse
 
 #############################################################################
 app = FastAPI()
@@ -63,8 +63,8 @@ async def load_model(request: LoadModelRequest):
         raise HTTPException(status_code=400, default="Model not found")
 
     model.load_model(request.models_name)
-    # return BaseResponse(message={f"=== Model '{request.models_name}' has been loaded successfully."})
-    return {f"=== Model '{request.models_name}' has been loaded successfully."}
+    return BaseResponse(message={f"=== Model '{request.models_name}' has been loaded successfully."})
+    # return {f"=== Model '{request.models_name}' has been loaded successfully."}
 
 # inference endpoint
 @app.post("/transcribe")
@@ -76,7 +76,7 @@ async def transcribe(file: UploadFile = File(...)):
 
     if not os.path.exists(audio_buffer):
         print("=== The audio file does not exist, please check the audio path.")
-        return {"command number": (-1, -1, -1)}
+        return BaseResponse(data={"ai_code": -1, "action_code": -1, "numbers": -1})
 
     result, inference_time = model.transcribe(audio_buffer)
     print(f"=== inference has been completed in {inference_time:.2f} seconds.")
@@ -85,10 +85,11 @@ async def transcribe(file: UploadFile = File(...)):
     if os.path.exists(audio_buffer):
         os.remove(audio_buffer)
 
-    return result['command number']
+    return BaseResponse(data=result['command number'])
+
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 52001))
+    port = int(os.environ.get("PORT", 5176))
     uvicorn.config.LOGGING_CONFIG["formatters"]["default"]["fmt"] = "%(asctime)s [%(name)s] %(levelprefix)s %(message)s"
     uvicorn.config.LOGGING_CONFIG["formatters"]["access"]["fmt"] = '%(asctime)s [%(name)s] %(levelprefix)s %(client_addr)s - "%(request_line)s" %(status_code)s'
     uvicorn.run(app, log_level='info', host='0.0.0.0', port=port)
