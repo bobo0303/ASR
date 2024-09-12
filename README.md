@@ -44,69 +44,27 @@ _MODELS = {
 ├── Dockerfile
 ├── init.py
 ├── api
-│ ├── init.py
-│ ├── pycache
-│ │ ├── init.cpython-38.pyc
-│ │ ├── model.cpython-38.pyc
-│ │ └── text_postprocess.cpython-38.pyc
-│ ├── model.py
-│ └── text_postprocess.py
+│   ├── init.py
+│   ├── model.py
+│   └── text_postprocess.py
 ├── app.yml
 ├── audio
-│ └── test.wav
+│   └── test.wav
 ├── lib
-│ ├── init.py
-│ ├── pycache
-│ │ ├── init.cpython-38.pyc
-│ │ ├── base_object.cpython-38.pyc
-│ │ ├── constant.cpython-38.pyc
-│ │ ├── data_object.cpython-38.pyc
-│ │ └── metric.cpython-38.pyc
-│ ├── base_object.py
-│ ├── constant.py
-│ ├── data_object.py
-│ └── whisper
-│ ├── init.py
-│ ├── main.py
-│ ├── pycache
-│ │ ├── init.cpython-38.pyc
-│ │ ├── audio.cpython-38.pyc
-│ │ ├── decoding.cpython-38.pyc
-│ │ ├── model.cpython-38.pyc
-│ │ ├── timing.cpython-38.pyc
-│ │ ├── tokenizer.cpython-38.pyc
-│ │ ├── transcribe.cpython-38.pyc
-│ │ ├── utils.cpython-38.pyc
-│ │ └── version.cpython-38.pyc
-│ ├── assets
-│ │ ├── gpt2.tiktoken
-│ │ ├── mel_filters.npz
-│ │ └── multilingual.tiktoken
-│ ├── audio.py
-│ ├── decoding.py
-│ ├── model.py
-│ ├── normalizers
-│ │ ├── init.py
-│ │ ├── basic.py
-│ │ ├── english.json
-│ │ └── english.py
-│ ├── timing.py
-│ ├── tokenizer.py
-│ ├── transcribe.py
-│ ├── triton_ops.py
-│ ├── utils.py
-│ └── version.py
+│   ├── init.py
+│   ├── base_object.py
+│   ├── constant.py
+│   ├── data_object.py
+│   └── whisper
 ├── logging.conf
 ├── logs
-│ ├── pycache
-│ │ └── logging_config.cpython-38.pyc
-│ └── sys.log
+│   └── sys.log
 ├── main.py
 ├── models
-│ ├── large-v2.pt
-│ └── medium.en.pt
+│   ├── large-v2.pt
+│   └── medium.en.pt
 ├── requirements.txt
 ├── test.py
 └── whl
-└── wjy3-1.7.1-py3-none-any.whl
+    └── wjy3-1.7.1-py3-none-any.whl
 ```
