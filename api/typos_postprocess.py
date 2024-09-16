@@ -1,2 +1,23 @@
 #
+import difflib
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from lib.constant import COMMAD_DICTIONARY
 
+def correct_sentence(sentence):
+    corrected_sentence = []
+    for word in sentence.split():
+        if word in COMMAD_DICTIONARY:
+            corrected_sentence.append(word)
+        else:
+            closest_word = difflib.get_close_matches(word, COMMAD_DICTIONARY, n=1, cutoff=0.8)
+            if closest_word:
+                corrected_sentence.append(closest_word[0])
+            else:
+                corrected_sentence.append(word)
+    
+    return " ".join(corrected_sentence)
+
+# 測試
+sentence = "The plane is cleared for landling."
+corrected = correct_sentence(sentence)
+print(corrected)
