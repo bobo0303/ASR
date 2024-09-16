@@ -70,9 +70,9 @@ NUMBER_PATTERNS = {
 
 #############################################################################
 COMMAD_DICTIONARY = {
-    "scramble", "holding hands", "engage", "mission complete", "initial five", "wedge",
+    "scramble", "holding", "hands", "engage", "mission", "complete", "initial", "wedge",
     "tiger", "viper",
-    "go cover", "in", "off", "cleared to land", "cleared for takeoff", "go around, 
+    "go", "cover", "in", "off", "cleared", "to", "land", "for", "takeoff", "take", "around, 
     "angel", "heading", 
     "zero", "one", "two", "three", "tree", "four", "five", "six", "seven", "eight", "nine", "niner", "thousand"
 }
