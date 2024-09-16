@@ -10,10 +10,10 @@ def correct_sentence(sentence):
             corrected_sentence.append(word)
         else:
             closest_word = difflib.get_close_matches(word, COMMAD_DICTIONARY, n=1, cutoff=0.8)
+            similarity = difflib.SequenceMatcher(None, word, closest_word[0]).ratio()
+            print(closest_word[0], similarity)
             if closest_word:
                 corrected_sentence.append(closest_word[0])
-                similarity = difflib.SequenceMatcher(None, word, closest_word[0]).ratio()
-                print(closest_word[0], similarity)
             else:
                 corrected_sentence.append(word)
                 
