@@ -17,7 +17,15 @@ def correct_sentence(sentence):
     
     return " ".join(corrected_sentence)
 
-# 測試
-sentence = "The plane is cleared for landling."
-corrected = correct_sentence(sentence)
-print(corrected)
+
+if __name__ == "__main__":
+    import time
+    # 測試
+    sentence = "The plane is cleared for landling."
+    start = time.time()
+    corrected = correct_sentence(sentence)
+    end = time.time()
+    print("Original text: ", sentence)
+    print("Corrected text: ", corrected)
+    print("spent time:", end - start)
+    
