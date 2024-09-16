@@ -19,6 +19,9 @@ def correct_sentence(sentence):
 
 
 if __name__ == "__main__":
+    #################################
+    #基本從資料庫轉換的方法已經做好，但還要去針對 "to" "for" 去做保護以免被錯誤轉換
+    #################################
     import time
     # 測試
     sentence = "The plane is cleared for landling."
