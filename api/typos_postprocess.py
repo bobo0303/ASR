@@ -13,10 +13,9 @@ def correct_sentence(sentence):
             if closest_word:
                 corrected_sentence.append(closest_word[0])
                 similarity = difflib.SequenceMatcher(None, word, closest_word[0]).ratio()
-                return closest_word[0], similarity
+                print(closest_word[0], similarity)
             else:
                 corrected_sentence.append(word)
-                return word, 0.0
                 
     return " ".join(corrected_sentence)
 
