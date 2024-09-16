@@ -12,9 +12,12 @@ def correct_sentence(sentence):
             closest_word = difflib.get_close_matches(word, COMMAD_DICTIONARY, n=1, cutoff=0.8)
             if closest_word:
                 corrected_sentence.append(closest_word[0])
+                similarity = difflib.SequenceMatcher(None, word, closest_word[0]).ratio()
+                return closest_word[0], similarity
             else:
                 corrected_sentence.append(word)
-    
+                return word, 0.0
+                
     return " ".join(corrected_sentence)
 
 
