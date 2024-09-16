@@ -11,7 +11,7 @@ OPTIONS = {
     "language": "en",
     "task": "transcribe",
     "initial_prompt": """
-                      two , off, tiger, viper, Scramble, Holding Hands, fluid four, Engaged, Mission Complete, Initial Five, wedge, Go Cover, IN, OFF, Cleared to Land, Angle and Heading, Cleared for Takeoff, Go Around.
+                      tree, niner, two, tiger, viper, scramble, holding hands, engage, mission complete, initial five, wedge, go cover, in, off, cleared to land, angel, heading, cleared for takeoff, go around
                       """,
 }
 
@@ -65,5 +65,15 @@ SPOKEN_PATTERNS = {
 
 NUMBER_PATTERNS = {
     '000': 'thousand',
+}
+#############################################################################
+
+#############################################################################
+COMMAD_DICTIONARY = {
+    "scramble", "holding hands", "engage", "mission complete", "initial five", "wedge",
+    "tiger", "viper",
+    "go cover", "in", "off", "cleared to land", "cleared for takeoff", "go around, 
+    "angel", "heading", 
+    "zero", "one", "two", "three", "tree", "four", "five", "six", "seven", "eight", "nine", "niner", "thousand"
 }
 #############################################################################
