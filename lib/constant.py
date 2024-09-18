@@ -1,11 +1,14 @@
 from pydantic import BaseModel
 import torch
 
-class ModlePath(BaseModel):
-    large_v2: str = "models/large-v2.pt"
-    medium: str = "models/medium.en.pt"
+#############################################################################
 
-# options for Whisper inference
+class ModlePath(BaseModel):
+    large_v2: str = "/mnt/whisper_main/weight/large-v2.pt"
+    medium: str = "/mnt/whisper_main/weight/medium.en.pt"
+
+#############################################################################
+""" options for Whisper inference """
 OPTIONS = {
     "fp16": torch.cuda.is_available(),
     "language": "en",
@@ -16,7 +19,7 @@ OPTIONS = {
 }
 
 #############################################################################
-# 示例 ATC 熱詞列表
+""" 示例 ATC 熱詞列表 """
 ACTION_HOTWORDS = [
     "Scramble", "Holding Hands", "Engage", "Engaged", "Mission Complete", "Initial Five",
     "Go Cover", "Cleared for Takeoff", "Cleared for Take off", "Cleared to Land", "Go Around", "IN", "OFF",
@@ -32,7 +35,7 @@ NUMBER_HOTWORDS = ['zero', 'one', 'two', 'tree', 'three', 'four', 'five',
 #############################################################################
 
 #############################################################################
-# 定義 AI 機器與動作的編碼
+""" 定義 AI 機器與動作的編碼 """
 AI_MACHINES = {
     "tiger one": 1, "tiger two": 2, "tiger tree": 3, "tiger three": 3, "tiger four": 4,
     "viper one": 5, "viper two": 6, "viper tree": 7, "viper four": 8,
@@ -48,7 +51,7 @@ ACTIONS = {
 
 
 #############################################################################
-# 數字文字轉換
+""" 數字文字轉換 """
 DIGIT_TO_WORD = {
     '0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four',
     '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine'
@@ -68,12 +71,23 @@ NUMBER_PATTERNS = {
 }
 #############################################################################
 
+HALLUCINATION_THRESHOLD = 60
+
 #############################################################################
-COMMAD_DICTIONARY = [
+""" command  """
+COMMAND_DICTIONARY = [
     "scramble", "holding", "hands", "engage", "mission", "complete", "initial", "wedge", \
     "tiger", "viper", \
     "go", "cover", "in", "off", "cleared", "to", "land", "for", "takeoff", "take", "around", \
     "angel", "heading", \
-    "zero", "one", "two", "three", "tree", "four", "five", "six", "seven", "eight", "nine", "niner", "thousand"
+    "thousand",
+    # "zero", "one", "two", "three", "tree", "four", "five", "six", "seven", "eight", "nine", "niner",
 ]
+
+""" special case """
+# to > two, for > four
+CASE1 = ["tiger", "viper"]
+# two > to, four > for
+CASE2 = ["cleared"]
+
 #############################################################################
