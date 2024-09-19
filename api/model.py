@@ -5,7 +5,8 @@ import time
 import torch
 import logging  
 
-from .text_postprocess import process_transcription, encode_command
+from .text_postprocess import process_transcription, hotword_extract, encode_command
+from .types_postprocess import correct_sentence
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from lib.constant import ModlePath, OPTIONS
 import lib.whisper as whisper
@@ -40,7 +41,7 @@ class Model:
 
         # 實現模型載入的邏輯
         start = time.time()
-        if models_name in ["large_v2"]:
+        if models_name == "large_v2":
             self.model = whisper.load_model(self.models_path.large_v2)
         elif models_name == "medium":
             self.model = whisper.load_model(self.models_path.medium)
@@ -70,11 +71,18 @@ class Model:
         # 實現推論的邏輯
         start = time.time()
         result = self.model.transcribe(audio_file_path, **OPTIONS)
+        print(result)
         ori_pred = result['text']
-        hotword, pred = process_transcription(ori_pred)
-        command_number = encode_command(hotword)
         end = time.time()
         inference_time = end-start
-
+        start = time.time()
+        spoken_text = process_transcription(ori_pred)
+        corrected_pred = correct_sentence(spoken_text)
+        hotword, pred = hotword_extract(corrected_pred)
+        command_number = encode_command(hotword)
+        end = time.time()
+        post_process_time = end-start
+        logger.debug(f"inference time {inference_time} secomds.")
+        logger.debug(f"post process time {post_process_time} secomds.")
 
         return {"hotword": hotword, "transcription": pred, "command number": command_number}, inference_time

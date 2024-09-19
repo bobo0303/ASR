@@ -1,6 +1,4 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File
-from fastapi.openapi.docs import get_swagger_ui_html
-from fastapi.staticfiles import StaticFiles
 import os
 import time
 import logging  
@@ -12,6 +10,7 @@ from threading import Thread
 from api.model import Model
 from lib.data_object import LoadModelRequest
 from lib.base_object import BaseResponse
+from lib.constant import HALLUCINATION_THRESHOLD
 
 #############################################################################
 if not os.path.exists("./audio"):  
@@ -49,10 +48,12 @@ async def load_default_model_preheat():
 
     logger.info("#####################################################")
     logger.info(f"Start to loading default model.")
+
     # load model
     default_model = "large_v2"
     model.load_model(default_model)  # 直接加載默認模型
     logger.info(f"Default model {default_model} has been loaded successfully.")
+
     # preheat
     logger.info(f"Start to preheat model.")
     default_audio = "audio/test.wav"
@@ -60,6 +61,7 @@ async def load_default_model_preheat():
     for _ in range(5):
         model.transcribe(default_audio)
     end = time.time()
+
     logger.info(f"Preheat model has been completed in {end - start:.2f} seconds.")
     logger.info("#####################################################")
 
@@ -101,6 +103,7 @@ async def transcribe(file: UploadFile = File(...)):
             A response containing the transcription results  
     """ 
     
+    start = time.time()
     default_result = {"ai_code": -1, "action_code": -1, "numbers": -1}
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     audio_buffer = f"audio/output_{timestamp}.wav"
@@ -110,17 +113,26 @@ async def transcribe(file: UploadFile = File(...)):
     if not os.path.exists(audio_buffer):
         logger.info("The audio file does not exist, please check the audio path.")
         return BaseResponse(message={"inference failed!"}, data=default_result)
+    end = time.time()
+    save_audio = end-start
 
+    start = time.time()
     result, inference_time = model.transcribe(audio_buffer)
     logger.info(f"inference has been completed in {inference_time:.2f} seconds.")
     logger.info(f"transcription: {result['transcription']}\n=== hotword: {result['hotword']}\n=== command number: {result['command number']}")  
+    end = time.time()
+    total_inference_time = end-start
 
     if len(result['transcription']) >= HALLUCINATION_THRESHOLD:
         return BaseResponse(message="out of hallucination threshold, please try again", data=default_result)
     
+    start = time.time()
     if os.path.exists(audio_buffer):
         os.remove(audio_buffer)
-    
+    end = time.time()
+    remove_audio_time = end-start
+    logger.debug(f"save_audio: {save_audio} seconds, total_inference_time: {total_inference_time}, remove_audio_time: {remove_audio_time}.")
+
     output_message = f"transcription: {result['transcription']} | hotword: ai_code: {result['hotword']['ai_code']}, action_code: {result['hotword']['action_code']},  numbers: {result['hotword']['numbers']}"
     return BaseResponse(message=output_message, data=result['command number'])
 
@@ -164,7 +176,8 @@ def schedule_daily_task():
 Thread(target=schedule_daily_task).start()  
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 52001))
+    port = int(os.environ.get("PORT", 80))
     uvicorn.config.LOGGING_CONFIG["formatters"]["default"]["fmt"] = "%(asctime)s [%(name)s] %(levelprefix)s %(message)s"
     uvicorn.config.LOGGING_CONFIG["formatters"]["access"]["fmt"] = '%(asctime)s [%(name)s] %(levelprefix)s %(client_addr)s - "%(request_line)s" %(status_code)s'
     uvicorn.run(app, log_level='info', host='0.0.0.0', port=port)
+ 

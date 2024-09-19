@@ -4,8 +4,8 @@ import torch
 #############################################################################
 
 class ModlePath(BaseModel):
-    large_v2: str = "/mnt/whisper_main/weight/large-v2.pt"
-    medium: str = "/mnt/whisper_main/weight/medium.en.pt"
+    large_v2: str = "models/large-v2.pt"
+    medium: str = "models/medium.en.pt"
 
 #############################################################################
 """ options for Whisper inference """
@@ -16,6 +16,9 @@ OPTIONS = {
     "initial_prompt": """
                       tree, niner, two, tiger, viper, scramble, holding hands, engage, mission complete, initial five, wedge, go cover, in, off, cleared to land, angel, heading, cleared for takeoff, go around
                       """,
+    "logprob_threshold": -1.0,
+    "no_speech_threshold": 0.6,
+    "condition_on_previous_text": False,
 }
 
 #############################################################################
@@ -32,7 +35,6 @@ AI_MACHINE_NUMBER_HOTWORDS = ['one', 'two', 'tree', 'three', 'four']
 
 NUMBER_HOTWORDS = ['zero', 'one', 'two', 'tree', 'three', 'four', 'five',
                    'six', 'seven', 'eight', 'nine', 'niner', 'thousand']
-#############################################################################
 
 #############################################################################
 """ 定義 AI 機器與動作的編碼 """
@@ -47,8 +49,6 @@ ACTIONS = {
     "initial five": 5, "go cover": 6, "in": 7, "off": 8, "cleared for takeoff": 9, "cleared for take off": 9,
     "cleared to land": 10, "go around": 11, "heading": 12, "angel": 13, "angle": 13
 }
-#############################################################################
-
 
 #############################################################################
 """ 數字文字轉換 """
@@ -63,12 +63,13 @@ WORD_TO_DIGIT = {
 }
 
 SPOKEN_PATTERNS = {
-        'thousand': '000',
+    'thousand': '000',
     }
 
 NUMBER_PATTERNS = {
     '000': 'thousand',
 }
+
 #############################################################################
 
 HALLUCINATION_THRESHOLD = 60
@@ -80,7 +81,7 @@ COMMAND_DICTIONARY = [
     "tiger", "viper", \
     "go", "cover", "in", "off", "cleared", "to", "land", "for", "takeoff", "take", "around", \
     "angel", "heading", \
-    "thousand",
+    "two", "four", "nine", "niner", "thousand",
     # "zero", "one", "two", "three", "tree", "four", "five", "six", "seven", "eight", "nine", "niner",
 ]
 
@@ -89,5 +90,7 @@ COMMAND_DICTIONARY = [
 CASE1 = ["tiger", "viper"]
 # two > to, four > for
 CASE2 = ["cleared"]
+# the case we need to convert
+CONVERSION_CASE = ["to", "two", "for", "four"]
 
 #############################################################################

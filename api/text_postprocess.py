@@ -159,24 +159,42 @@ def separate_alphanumeric(text):
     separated_text = pattern.sub(r'\1 \2\3 \4', text)
     return separated_text
 
+
+
 # 處理轉錄文本，找到熱詞並轉換數字為口語形式
 def process_transcription(transcription):
-    """  This function processes the transcribed text, identifies hotwords, and converts numbers to spoken form.  
+    """   This function processes the transcribed text, identifies hotwords, and converts numbers to spoken form.  
       
     :param  
-        ----------  
-        transcription: str  
-            The transcribed text to be processed.  
+    ----------  
+    transcription: str  
+        The transcribed text to be processed.  
       
-    :rtype  
-        ----------  
-        tuple:   
-            A tuple containing a dictionary of hotwords and the processed spoken text.  
+    :return  
+    ----------  
+    str:  
+        The processed spoken text.  
     """ 
 
     cleaned_text = remove_punctuation_and_lowercase(transcription)
     separated_text = separate_alphanumeric(cleaned_text)
     spoken_text = mixed_to_spoken(separated_text)
+
+    return spoken_text
+
+def hotword_extract(spoken_text):
+    """ This function identifies hotwords from the processed spoken text.  
+      
+    :param  
+    ----------  
+    spoken_text: str  
+        The processed spoken text from which hotwords are to be identified.  
+      
+    :return  
+    ----------  
+    tuple:  
+        A tuple containing a dictionary of hotwords and the spoken text.  
+    """
 
     # find AI machine type
     matched_machine_index, matched_machine_hotwords = find_matched_hotwords(spoken_text, AI_MACHINE_HOTWORDS)
@@ -243,7 +261,7 @@ def spoken_to_mixed(input_string):
             if word in WORD_TO_DIGIT:
                 result.append(WORD_TO_DIGIT[word])
             elif word in SPOKEN_PATTERNS:
-                result.append(spoken_patterns[word])
+                result.append(SPOKEN_PATTERNS[word])
             else:
                 result.append(word)
 
@@ -297,22 +315,24 @@ def encode_command(hotwords):
         "numbers": -1
     }
 
-    ids['ai_code'] = AI_MACHINES.get(hotwords['ai_code'], -1)
-    ids['action_code'] = ACTIONS.get(hotwords['action_code'], -1)
+    ids['ai_code'] = str(AI_MACHINES.get(hotwords['ai_code'], -1))
+    ids['action_code'] = str(ACTIONS.get(hotwords['action_code'], -1))
     if hotwords['numbers'] != -1:
-        ids['numbers'] = int(spoken_to_mixed(hotwords['numbers']))
+        ids['numbers'] = spoken_to_mixed(hotwords['numbers'])
+
     return ids
 
 if __name__ == "__main__":
     # 示例使用
 
-    transcription = "tiger1 angel, three000."
+    transcription = "tiger one heading zero one zero"
     start = time.time()
-    matched_hotwords, spoken_text = process_transcription(transcription)
+    spoken_text = process_transcription(transcription)
+    matched_hotwords, spoken_text = hotword_extract(spoken_text)
     command_number = encode_command(matched_hotwords)
     end = time.time()
     print("Matched hotwords:", matched_hotwords)
-    print("command number:", (command_number['ai code'], command_number['action code'], command_number['numbers']))
+    print("command number:", (command_number['ai_code'], command_number['action_code'], command_number['numbers']))
     print("Spoken form:", spoken_text)
     print("spent time:", end - start)
 

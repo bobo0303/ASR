@@ -2,7 +2,7 @@ FROM python:3.8.10-slim
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
-RUN apt-get update && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 vim ffmpeg zip unzip htop screen && apt-get clean && rm -rf /var/lib/apt/lists
+RUN apt-get update && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 vim ffmpeg zip unzip htop screen tree && apt-get clean && rm -rf /var/lib/apt/lists
 
 
 RUN pip install --upgrade pip
@@ -16,7 +16,8 @@ RUN pip3 install -r requirements.txt && \
 # app
 WORKDIR /app
 
-
+# 复制 app 资料夹到 Docker 映像中的 /app 目录  
+COPY . /app  
 
 # 设置环境变量  
 ENV LC_ALL=C.UTF-8  
@@ -24,13 +25,4 @@ ENV LANG=C.UTF-8
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility  
 ENV NVIDIA_VISIBLE_DEVICES=all  
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64  
-ENV PORT=52001  
-
-# 暴露端口  
-EXPOSE $PORT/tcp
-
-# 在run時要帶 -v /usr/local/cuda:/usr/local/cuda
-
-
-
 
