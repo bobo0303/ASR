@@ -6,12 +6,15 @@ import torch
 import logging  
 
 from .text_postprocess import process_transcription, hotword_extract, encode_command
-from .types_postprocess import correct_sentence
+from .typos_postprocess import correct_sentence
+from .word_split_postprocess import WordNinja
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from lib.constant import ModlePath, OPTIONS
-import lib.whisper as whisper
+import whisper
 
 logger = logging.getLogger(__name__)  
+CSV_EXPERIMENT = False
+
 
 class Model:
     def __init__(self):
@@ -21,6 +24,7 @@ class Model:
 
         self.model = None
         self.models_path = ModlePath()
+        self.wordninja_instance = WordNinja()  
 
     def load_model(self, models_name):
         """  Load the specified model based on the model's name.  
@@ -71,18 +75,44 @@ class Model:
         # 實現推論的邏輯
         start = time.time()
         result = self.model.transcribe(audio_file_path, **OPTIONS)
-        print(result)
+        logger.debug(result)
         ori_pred = result['text']
         end = time.time()
         inference_time = end-start
         start = time.time()
-        spoken_text = process_transcription(ori_pred)
+        # 分詞
+        splited_text = self.wordninja_instance.word_split(ori_pred)
+        # 小寫、數轉英、分英數黏
+        spoken_text = process_transcription(splited_text)
+        # 相似字校正
         corrected_pred = correct_sentence(spoken_text)
+        # 熱詞查找
         hotword, pred = hotword_extract(corrected_pred)
+        # 編碼轉換
         command_number = encode_command(hotword)
         end = time.time()
         post_process_time = end-start
         logger.debug(f"inference time {inference_time} secomds.")
         logger.debug(f"post process time {post_process_time} secomds.")
+
+        if CSV_EXPERIMENT:
+            import csv
+            csv_file_path = "noise.csv"
+            # 打開 CSV 文件進行寫入
+            with open(csv_file_path, 'a', newline='', encoding='utf-8') as csv_file:
+                csv_writer = csv.writer(csv_file)
+                if result["text"] != '':
+                    temperature = result['segments'][0]['temperature']
+                    logprob = result['segments'][0]['avg_logprob']
+                    no_speech_prob = result['segments'][0]['no_speech_prob']
+                    tokens_num = len(result['segments'][0]['tokens'])
+                else:
+                    temperature = 0
+                    logprob = 0
+                    no_speech_prob = 0
+                    tokens_num = 0
+                csv_writer.writerow([ori_pred, temperature, logprob, no_speech_prob, tokens_num])
+
+
 
         return {"hotword": hotword, "transcription": pred, "command number": command_number}, inference_time

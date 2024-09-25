@@ -103,10 +103,15 @@ async def transcribe(file: UploadFile = File(...)):
             A response containing the transcription results  
     """ 
     
+    # Get the file name  
+    file_name = file.filename  
+    logger.info(f"requist ID name {file_name}.")
+
     start = time.time()
     default_result = {"ai_code": -1, "action_code": -1, "numbers": -1}
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     audio_buffer = f"audio/output_{timestamp}.wav"
+
     with open(audio_buffer, 'wb') as f:
         f.write(file.file.read())
 
@@ -122,15 +127,16 @@ async def transcribe(file: UploadFile = File(...)):
     logger.info(f"transcription: {result['transcription']}\n=== hotword: {result['hotword']}\n=== command number: {result['command number']}")  
     end = time.time()
     total_inference_time = end-start
-
-    if len(result['transcription']) >= HALLUCINATION_THRESHOLD:
-        return BaseResponse(message="out of hallucination threshold, please try again", data=default_result)
     
     start = time.time()
     if os.path.exists(audio_buffer):
         os.remove(audio_buffer)
     end = time.time()
     remove_audio_time = end-start
+
+    if len(result['transcription']) >= HALLUCINATION_THRESHOLD:
+        return BaseResponse(message="out of hallucination threshold, please try again", data=default_result)
+
     logger.debug(f"save_audio: {save_audio} seconds, total_inference_time: {total_inference_time}, remove_audio_time: {remove_audio_time}.")
 
     output_message = f"transcription: {result['transcription']} | hotword: ai_code: {result['hotword']['ai_code']}, action_code: {result['hotword']['action_code']},  numbers: {result['hotword']['numbers']}"

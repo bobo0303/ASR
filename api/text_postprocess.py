@@ -201,18 +201,19 @@ def hotword_extract(spoken_text):
 
     # find AI machine number
     if matched_machine_index is not None and spoken_text:
-        if len(spoken_text.split())>=matched_machine_index+1:
+        if len(spoken_text.split())>matched_machine_index+1:
             ai_machine_number = check_numbers_hotwords([spoken_text.split()[matched_machine_index+1]], AI_MACHINE_NUMBER_HOTWORDS)
             matched_machine_hotwords=f"{matched_machine_hotwords} {' '.join(ai_machine_number)}" if ai_machine_number != -1 else -1
+    
+    # reshape spoken_text 
+    reshaped_spoken_text = ' '.join(spoken_text.split()[matched_machine_index + 1:]) if matched_machine_hotwords != -1 else spoken_text  
 
     # find action type
-    matched_action_index, matched_action_hotwords = find_matched_hotwords(spoken_text, ACTION_HOTWORDS)
-
-    # number to word
+    matched_action_index, matched_action_hotwords = find_matched_hotwords(reshaped_spoken_text, ACTION_HOTWORDS)
 
     # checking the last number
-    if matched_action_hotwords in ["angel", "heading"] and spoken_text:
-        last_data = spoken_text.split()[spoken_text.split().index(matched_action_hotwords)+1:]
+    if matched_action_hotwords in ["angel", "heading"] and reshaped_spoken_text:
+        last_data = reshaped_spoken_text.split()[matched_action_index+1:]
         numbers = check_numbers_hotwords(last_data, NUMBER_HOTWORDS)
         numbers = ' '.join(numbers) if numbers != -1 else -1
     else:
@@ -317,15 +318,14 @@ def encode_command(hotwords):
 
     ids['ai_code'] = str(AI_MACHINES.get(hotwords['ai_code'], -1))
     ids['action_code'] = str(ACTIONS.get(hotwords['action_code'], -1))
-    if hotwords['numbers'] != -1:
-        ids['numbers'] = spoken_to_mixed(hotwords['numbers'])
-
+    ids['numbers'] = str(spoken_to_mixed(hotwords['numbers']) if hotwords['numbers'] != -1 else '-1')
+        
     return ids
 
 if __name__ == "__main__":
     # 示例使用
 
-    transcription = "tiger one heading zero one zero"
+    transcription = "one tiger"
     start = time.time()
     spoken_text = process_transcription(transcription)
     matched_hotwords, spoken_text = hotword_extract(spoken_text)
