@@ -66,7 +66,6 @@ _MODELS = {
 │   ├── large-v2.pt
 │   └── medium.en.pt
 ├── requirements.txt
-├── test.py
 └── whl
     └── wjy3-1.7.1-py3-none-any.whl
 ```
