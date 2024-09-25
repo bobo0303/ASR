@@ -17,8 +17,7 @@ OPTIONS = {
                       tree, niner, two, tiger, viper, scramble, holding hands, engage, mission complete, initial five, wedge, go cover, in, off, cleared to land, angel, heading, cleared for takeoff, go around
                       """,
     "logprob_threshold": -1.0,
-    "no_speech_threshold": 0.6,
-    "condition_on_previous_text": False,
+    "no_speech_threshold": 0.2,
 }
 
 #############################################################################
@@ -40,8 +39,8 @@ NUMBER_HOTWORDS = ['zero', 'one', 'two', 'tree', 'three', 'four', 'five',
 """ 定義 AI 機器與動作的編碼 """
 AI_MACHINES = {
     "tiger one": 1, "tiger two": 2, "tiger tree": 3, "tiger three": 3, "tiger four": 4,
-    "viper one": 5, "viper two": 6, "viper tree": 7, "viper four": 8,
-    "viber one": 5, "viber two": 6, "viber tree": 7, "viber four": 8
+    "viper one": 5, "viper two": 6, "viper tree": 7, "viper three": 7, "viper four": 8,
+    "viber one": 5, "viber two": 6, "viber tree": 7, "viber three": 7, "viber four": 8
 }
 
 ACTIONS = {
