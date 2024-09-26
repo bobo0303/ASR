@@ -1,5 +1,5 @@
 # Whisper  
-<img src="https://imgur.com/ACGOkVJ.jpg" alt="https://imgur.com/ACGOkVJ.jpg" title="https://imgur.com/ACGOkVJ.jpg" width="1312" height="350">
+<img src="https://imgur.com/ACGOkVJ.jpg" alt="https://imgur.com/ACGOkVJ.jpg" title="https://imgur.com/ACGOkVJ.jpg">
 [Whisper](https://github.com/openai/whisper/tree/main) 是 OpenAI 提供的一個語音辨識模型。  
   
 ## 模型下载  
