@@ -25,6 +25,20 @@ docker build -t whisper_api:lastest .
 docker run -d -it --gpus all --shm-size 32G --runtime nvidia --device=/dev/nvidia-uvm --device=/dev/nvidia-uvm-tools --device=/dev/nvidiactl --device=/dev/nvidia0 --name whisper_api --network host -v /data/bobo/whisper_API:/mnt whisper_api:lastest bash
 ```
 
+## OPTIONS
+```OPTIONS
+OPTIONS = {
+    "fp16": torch.cuda.is_available(),
+    "language": "en",
+    "task": "transcribe",
+    "initial_prompt": """
+                      tree, niner, two, tiger, viper, scramble, holding hands, engage, mission complete, initial five, wedge, go cover, in, off, cleared to land, angel, heading, cleared for takeoff, go around
+                      """,
+    "logprob_threshold": -1.0,
+    "no_speech_threshold": 0.2,
+}
+```
+
 ## 目錄結構  
 
 ```
