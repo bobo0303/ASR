@@ -1,6 +1,6 @@
 # Whisper  
   
-[Whisper](https://github.com/openai/whisper/tree/main) 是 OpenAI 提供的一个高级语音识别模型。以下是可用模型的下载链接。  
+[Whisper](https://github.com/openai/whisper/tree/main) 是 OpenAI 提供的一個語音辨識模型。以下是可用模型的下載連結。  
   
 ## 模型下载链接  
   
