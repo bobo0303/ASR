@@ -11,7 +11,7 @@
 | `base.en`     | [下載位置](https://openaipublic.azureedge.net/main/whisper/models/25a8566e1d0c1e2231d1c762132cd20e0f96a85d16145c3a00adf5d1ac670ead/base.en.pt)     | `medium.en`   | [下載位置](https://openaipublic.azureedge.net/main/whisper/models/d7440d1dc186f76616474e0ff0b3b6b879abc9d1a4926b7adfa41db2d497ab4f/medium.en.pt)   |  
 | `base`        | [下載位置](https://openaipublic.azureedge.net/main/whisper/models/ed3a0b6b1c0edf879ad9b11b1af5a0e6ab5db9205f891f668f8b0e6c6326e34e/base.pt)        | `medium`      | [下載位置](https://openaipublic.azureedge.net/main/whisper/models/345ae4da62f9b3d59415adc60127b97c714f32e89e936602e85993674d08dcb1/medium.pt)      |  
 | `large-v1`    | [下載位置](https://openaipublic.azureedge.net/main/whisper/models/e4b87e7e0bf463eb8e6956e646f1e277e901512310def2c24bf0e11bd3c28e9a/large-v1.pt)    | `large-v2`    | [下載位置](https://openaipublic.azureedge.net/main/whisper/models/81f7c96c852ee8fc832187b0132e569d6c3065a3252ed18e56effd0b6a73e524/large-v2.pt)    |  
-| `large-v3`    | [下載位置](https://openaipublic.azureedge.net/main/whisper/models/e5b1a55b89c    |  
+| `large-v3`    | [下載位置](https://openaipublic.azureedge.net/main/whisper/models/e5b1a55b89c)     
   
 ## 建 Images 
   
