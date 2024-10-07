@@ -171,15 +171,16 @@ def delete_old_audio_files():
                 os.remove(file_path)  
                 logger.info(f"Deleted old file: {file_path}")  
   
-# 每日任务调度  
-def schedule_daily_task():  
-    schedule.every().day.at("00:00").do(delete_old_audio_files)  
-    while True:  
-        schedule.run_pending()  
-        time.sleep(60)  
-  
 # 启动每日任务调度  
-Thread(target=schedule_daily_task).start()  
+stop_event = Event()  
+task_thread = Thread(target=schedule_daily_task, args=(stop_event,))  
+task_thread.start()  
+  
+@app.on_event("shutdown")  
+def shutdown_event():  
+    stop_event.set()  
+    task_thread.join()  
+    logger.info("Scheduled task has been stopped.")   
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 80))
