@@ -1,5 +1,6 @@
 # model.py
 import os
+import gc
 import sys
 import time
 import torch
@@ -7,6 +8,7 @@ import logging
 
 from .text_postprocess import process_transcription, hotword_extract, encode_command
 from .typos_postprocess import correct_sentence
+from .symbol_postporcess import symbol_transfor
 from .word_split_postprocess import WordNinja
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from lib.constant import ModlePath, OPTIONS
@@ -45,14 +47,44 @@ class Model:
 
         # 實現模型載入的邏輯
         start = time.time()
+        
+        # 釋放舊模型資源  
+        self._release_model() 
+        
+        # choose model weight
         if models_name == "large_v2":
             self.model = whisper.load_model(self.models_path.large_v2)
         elif models_name == "medium":
             self.model = whisper.load_model(self.models_path.medium)
+        elif models_name == "turbo":
+            self.model = whisper.load_model(self.models_path.turbo)
+            
         device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model.to(device)
         end = time.time()
         logger.info(f"Model '{models_name}' loaded in {end - start:.2f} secomds.")
+        
+    def _release_model(self):  
+        """    
+        Release the resources occupied by the current model.  
+          
+        :param  
+        ----------  
+        None: The function does not take any parameters.  
+          
+        :rtype  
+        ----------  
+        None: The function does not return any value.  
+          
+        :logs  
+        ----------  
+        Model release status.  
+        """  
+        if self.model is not None:  
+            del self.model  
+            gc.collect()  
+            torch.cuda.empty_cache()  
+            logger.info("Previous model resources have been released.") 
 
     def transcribe(self, audio_file_path):
         """  Perform transcription on the given audio file.  
@@ -80,8 +112,10 @@ class Model:
         end = time.time()
         inference_time = end-start
         start = time.time()
+        # 符號轉換
+        transfored_text = symbol_transfor(ori_pred)
         # 分詞
-        splited_text = self.wordninja_instance.word_split(ori_pred)
+        splited_text = self.wordninja_instance.word_split(transfored_text)
         # 小寫、數轉英、分英數黏
         spoken_text = process_transcription(splited_text)
         # 相似字校正
