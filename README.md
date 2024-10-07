@@ -65,6 +65,7 @@ OPTIONS = {
 ├── main.py
 ├── models
 │   ├── large-v2.pt
+│   ├── large-v3-turbo.pt
 │   └── medium.en.pt
 ├── requirements.txt
 └── whl
