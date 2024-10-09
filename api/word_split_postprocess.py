@@ -30,7 +30,7 @@ if __name__ == "__main__":
     # 示例使用  
     wordninja_instance = WordNinja()  
     import time  
-    text = "cleared"  
+    text = "scrumble"  
     start = time.time()  
     splited_text = wordninja_instance.word_split(text)  
     end = time.time()  

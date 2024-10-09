@@ -58,6 +58,34 @@ def find_matched_hotwords(text, hotwords):
             return matched_index, matched_words
     return None, -1
 
+# 比對熱詞並返回匹配的關鍵詞
+def find_all_matched_hotwords(text, hotwords):
+    """  Find matched hotwords in the text  
+
+    :param  
+        ----------  
+        text: str  
+            The input text to be searched  
+        hotwords: list  
+            The list of hotwords to match  
+    :rtype  
+        ----------  
+        tuple: The index and matched hotword, or (None, -1) if no match found  
+    """ 
+    matched_words = []
+    matched_index = []
+    text = f" {text} "
+    for index, word in enumerate(hotwords):
+        if f" {word.lower()} " in text:
+            matched_words.append(word.lower())
+            matched_index.append(text.split().index(word.lower().split()[-1]))
+    if matched_words and matched_index:
+        min_index = min(enumerate(matched_index), key=lambda x: x[1])[0]  
+        word = matched_words[min_index]
+        index = matched_index[min_index]
+        return word, index
+    return None, -1
+
 # 比對熱詞只保留數字並返回關鍵數字
 def check_numbers_hotwords(text, hotwords):
     """  Check for number hotwords in the text  

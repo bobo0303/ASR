@@ -6,6 +6,7 @@ import torch
 class ModlePath(BaseModel):
     large_v2: str = "models/large-v2.pt"
     medium: str = "models/medium.en.pt"
+    turbo: str = "models/large-v3-turbo.pt"
 
 #############################################################################
 """ options for Whisper inference """
@@ -96,5 +97,14 @@ CONVERSION_CASE = ["to", "two", "for", "four"]
 """ wordninja loading the word file """
 
 COMMANDS_GZ = "lib/AI_pilot.txt.gz"
+
+#############################################################################
+""" symbol to number """
+
+SYMBOL_TO_WORD = {
+    "i": 1, "ii": 2, "iii": 3, "iv": 4, "v": 5,
+    "vi": 6, "vii": 7, "viii": 8, "ix": 9, 
+    "α": "alpha", "β": "beta", "γ": "gama", "δ": "delta"
+}
 
 #############################################################################

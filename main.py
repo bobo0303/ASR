@@ -105,8 +105,8 @@ async def transcribe(file: UploadFile = File(...)):
     logger.info(f"request ID name {file_name}.")  
     start = time.time()  
     default_result = {"ai_code": -1, "action_code": -1, "numbers": -1}  
-    timestamp = local_now.strftime("%Y%m%d%H%M%S")  
-    audio_buffer = f"audio/output_{timestamp}.wav"  
+    # timestamp = local_now.strftime("%Y%m%d%H%M%S")  
+    audio_buffer = f"audio/{file_name}"  
     with open(audio_buffer, 'wb') as f:  
         f.write(file.file.read())  
     if not os.path.exists(audio_buffer):  
@@ -121,8 +121,8 @@ async def transcribe(file: UploadFile = File(...)):
     end = time.time()  
     total_inference_time = end - start  
     start = time.time()  
-    if os.path.exists(audio_buffer):  
-        os.remove(audio_buffer)  
+    # if os.path.exists(audio_buffer):  
+        # os.remove(audio_buffer)  
     end = time.time()  
     remove_audio_time = end - start  
     if len(result['transcription']) >= HALLUCINATION_THRESHOLD:  
