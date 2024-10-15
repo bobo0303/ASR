@@ -40,8 +40,8 @@ NUMBER_HOTWORDS = ['zero', 'one', 'two', 'tree', 'three', 'four', 'five',
 """ 定義 AI 機器與動作的編碼 """
 AI_MACHINES = {
     "tiger one": 1, "tiger two": 2, "tiger tree": 3, "tiger three": 3, "tiger four": 4,
-    "viper one": 5, "viper two": 6, "viper tree": 7, "viper three": 7, "viper four": 8,
-    "viber one": 5, "viber two": 6, "viber tree": 7, "viber three": 7, "viber four": 8
+    "viper one": 1, "viper two": 2, "viper tree": 3, "viper three": 3, "viper four": 4,
+    "viber one": 1, "viber two": 2, "viber tree": 3, "viber three": 3, "viber four": 4
 }
 
 ACTIONS = {
