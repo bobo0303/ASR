@@ -252,6 +252,20 @@ def hotword_extract(spoken_text):
     # reshape spoken_text 
     reshaped_spoken_text = ' '.join(spoken_text.split()[matched_min_index + 1:]) if matched_machine_hotword != -1 else spoken_text  
 
+    """
+    # find AI machine type
+    matched_machine_index, matched_machine_hotwords = find_matched_hotwords(spoken_text, AI_MACHINE_HOTWORDS)
+
+    # find AI machine number
+    if matched_machine_index is not None and spoken_text:
+        if len(spoken_text.split())>matched_machine_index+1:
+            ai_machine_number = check_numbers_hotwords([spoken_text.split()[matched_machine_index+1]], AI_MACHINE_NUMBER_HOTWORDS)
+            matched_machine_hotwords=f"{matched_machine_hotwords} {' '.join(ai_machine_number)}" if ai_machine_number != -1 else -1
+    
+    # reshape spoken_text 
+    reshaped_spoken_text = ' '.join(spoken_text.split()[matched_machine_index + 1:]) if matched_machine_hotwords != -1 else spoken_text  
+    """
+
     # find action type
     matched_action_index, matched_action_hotwords = find_all_matched_hotwords(reshaped_spoken_text, ACTION_HOTWORDS)
     if matched_action_index is not None:
