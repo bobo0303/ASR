@@ -65,6 +65,7 @@ async def load_default_model_preheat():
   
     logger.info(f"Preheat model has been completed in {end - start:.2f} seconds.")  
     logger.info("#####################################################")  
+    delete_old_audio_files()
   
 # load model endpoint  
 @app.post("/load_model")  

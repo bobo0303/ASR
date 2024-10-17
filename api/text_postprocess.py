@@ -79,12 +79,17 @@ def find_all_matched_hotwords(text, hotwords):
         if f" {word.lower()} " in text:
             matched_words.append(word.lower())
             matched_index.append(text.split().index(word.lower().split()[-1]))
-    if matched_words and matched_index:
+    if matched_index and matched_words:
+        return matched_index, matched_words
+    else:
+        return None, -1
+
+def find_min_matched(matched_index, matched_words):
+    if matched_index and matched_words:
         min_index = min(enumerate(matched_index), key=lambda x: x[1])[0]  
         word = matched_words[min_index]
         index = matched_index[min_index]
-        return word, index
-    return None, -1
+        return index, word
 
 # 比對熱詞只保留數字並返回關鍵數字
 def check_numbers_hotwords(text, hotwords):
@@ -225,19 +230,32 @@ def hotword_extract(spoken_text):
     """
 
     # find AI machine type
-    matched_machine_index, matched_machine_hotwords = find_matched_hotwords(spoken_text, AI_MACHINE_HOTWORDS)
+    matched_machine_index, matched_machine_hotwords = find_all_matched_hotwords(spoken_text, AI_MACHINE_HOTWORDS)
 
+    matched_machine_hotword = -1
     # find AI machine number
-    if matched_machine_index is not None and spoken_text:
-        if len(spoken_text.split())>matched_machine_index+1:
-            ai_machine_number = check_numbers_hotwords([spoken_text.split()[matched_machine_index+1]], AI_MACHINE_NUMBER_HOTWORDS)
-            matched_machine_hotwords=f"{matched_machine_hotwords} {' '.join(ai_machine_number)}" if ai_machine_number != -1 else -1
-    
+    if matched_machine_index and matched_machine_hotwords:  
+        # find the min index of all matched hotwords
+        matched_min_index, matched_min_hotwords = find_min_matched(matched_machine_index, matched_machine_hotwords)
+        # loop to find the first and correct matched_machine_hotword
+        while spoken_text and len(spoken_text.split())>matched_min_index+1:
+            ai_machine_number = check_numbers_hotwords([spoken_text.split()[matched_min_index+1]], AI_MACHINE_NUMBER_HOTWORDS)
+            matched_machine_hotword=f"{matched_min_hotwords} {' '.join(ai_machine_number)}" if ai_machine_number != -1 else -1
+            # remove used index and hotwords
+            matched_machine_index.remove(matched_min_index)
+            matched_machine_hotwords.remove(matched_min_hotwords)
+            # if index all used or found the hotword break loop 
+            if not matched_machine_index or matched_machine_hotword != -1:  
+                break  
+            matched_min_index, matched_min_hotwords = find_min_matched(matched_machine_index, matched_machine_hotwords)
+
     # reshape spoken_text 
-    reshaped_spoken_text = ' '.join(spoken_text.split()[matched_machine_index + 1:]) if matched_machine_hotwords != -1 else spoken_text  
+    reshaped_spoken_text = ' '.join(spoken_text.split()[matched_min_index + 1:]) if matched_machine_hotword != -1 else spoken_text  
 
     # find action type
-    matched_action_index, matched_action_hotwords = find_matched_hotwords(reshaped_spoken_text, ACTION_HOTWORDS)
+    matched_action_index, matched_action_hotwords = find_all_matched_hotwords(reshaped_spoken_text, ACTION_HOTWORDS)
+    if matched_action_index is not None:
+        matched_action_index, matched_action_hotwords = find_min_matched(matched_action_index, matched_action_hotwords)
 
     # checking the last number
     if matched_action_hotwords in ["angel", "heading"] and reshaped_spoken_text:
@@ -248,7 +266,7 @@ def hotword_extract(spoken_text):
         numbers = -1
 
     hotwords = {
-        "ai_code": matched_machine_hotwords,
+        "ai_code": matched_machine_hotword,
         "action_code": matched_action_hotwords,
         "numbers": numbers
     }
@@ -353,7 +371,7 @@ def encode_command(hotwords):
 if __name__ == "__main__":
     # 示例使用
 
-    transcription = "one tiger"
+    transcription = "viper two heading go around tiger two heading go around"
     start = time.time()
     spoken_text = process_transcription(transcription)
     matched_hotwords, spoken_text = hotword_extract(spoken_text)
