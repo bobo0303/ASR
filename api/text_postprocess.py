@@ -58,6 +58,7 @@ def find_matched_hotwords(text, hotwords):
             return matched_index, matched_words
     return None, -1
 
+
 # 比對熱詞並返回匹配的關鍵詞
 def find_all_matched_hotwords(text, hotwords):
     """  Find matched hotwords in the text  
@@ -78,7 +79,10 @@ def find_all_matched_hotwords(text, hotwords):
     for index, word in enumerate(hotwords):
         if f" {word.lower()} " in text:
             matched_words.append(word.lower())
-            matched_index.append(text.split().index(word.lower().split()[-1]))
+            print(text.index(word.lower()))
+            print(text[:text.index(word.lower())].split())
+            match_num = len(text[:text.index(word.lower())].split()) + len(word.lower().split())
+            matched_index.append(match_num)
     if matched_index and matched_words:
         return matched_index, matched_words
     else:
